@@ -1,0 +1,37 @@
+pipeline{
+agent any
+
+tools{
+maven "maven3.9.9"    
+}
+
+stages{
+    stage('Checkout'){
+        steps{
+            git branch: 'development', credentialsId: '7c063c2d-13d1-4c70-b165-2c3f8ca627b6', url: 'https://github.com/VinayP353/maven-web-application.git'
+        }
+    }
+    stage('Build'){
+        steps{
+            sh "mvn clean package"
+        }
+    }
+    stage('SonarQUbeReport'){
+        steps{
+            sh "mvn sonar:sonar"
+        }
+    }
+    stage('ArtifactRepo'){
+        steps{
+            sh "mvn deploy"
+        }
+    }
+    stage('DeployToTomcat'){
+        steps{
+            sshagent(['8a43c9f9-9c78-4ebc-b21a-778f4d8bea0f']) {
+sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ubuntu@3.85.4.45:/opt/apache-tomcat-9.0.98/webapps"
+}
+        }
+    }
+}
+}
