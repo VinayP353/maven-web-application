@@ -28,7 +28,7 @@ node ('built-in') {
     def mavenHome = tool name : "maven3.9.9"
 try{
 stage('checkoutcode'){
-notifyBuild(STARTED)
+notifyBuild('STARTED')
 git branch: 'development', credentialsId: '7c063c2d-13d1-4c70-b165-2c3f8ca627b6', url: 'https://github.com/VinayP353/maven-web-application.git'
 }
 
